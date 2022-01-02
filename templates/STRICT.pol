@@ -1,0 +1,40 @@
+# https://access.redhat.com/articles/3642912
+# This is a stricter policy than FIPS:OSPP
+
+mac = HMAC-SHA2-256 UMAC-128 HMAC-SHA2-512
+
+group = X25519 SECP256R1 SECP384R1 SECP521R1 \
+    FFDHE-2048 FFDHE-3072 FFDHE-4096 FFDHE-6144 FFDHE-8192
+
+hash = SHA2-256 SHA2-384 SHA2-512 SHA2-224 SHA3-384 SHA3-512
+
+sign = EDDSA-ED25519 \
+       RSA-PSS-SHA2-256 RSA-PSS-SHA2-384 RSA-PSS-SHA2-512 \
+       RSA-SHA3-256 RSA-SHA2-256 \
+       RSA-SHA3-384 RSA-SHA2-384 \
+       RSA-SHA3-512 RSA-SHA2-512 \
+       RSA-PSS-SHA2-224 RSA-SHA2-224
+
+# tls_cipher is deprecated
+tls_cipher = AES-256-GCM AES-256-CCM \
+    AES-128-GCM AES-128-CCM
+
+cipher = AES-256-GCM AES-256-CCM CHACHA20-POLY1305 AES-256-CTR \
+    AES-128-GCM AES-128-CCM AES-128-CTR
+
+key_exchange = DHE DHE-RSA PSK DHE-PSK
+# protocol is deprecated
+protocol = TLS1.3 TLS1.2 DTLS1.2
+# ike_protocol is deprecated
+ike_protocol = IKEv2
+
+min_tls_version = TLS1.2
+min_dtls_version = DTLS1.2
+
+# Parameter sizes
+min_dh_size = {{ min_dh_size }}
+min_dsa_size = 3072
+min_rsa_size = 3072
+
+# GnuTLS only for now
+sha1_in_certs = 0

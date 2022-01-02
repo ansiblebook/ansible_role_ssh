@@ -1,0 +1,107 @@
+---
+# yamllint disable rule:line-length
+- name: Setup
+  setup:
+
+- name: Print out operating system details
+  debug:
+    msg: >-
+      os_family:
+      {{ ansible_os_family }},
+      distro:
+      {{ ansible_distribution }}
+      {{ ansible_distribution_version }}
+
+- name: Set distro_version
+  set_fact:
+    distro_version: "{{ ansible_distribution }}{{ ansible_distribution_major_version }}"
+
+- name: Install SSH server
+  package:
+    name: openssh-server
+    state: present
+    update_cache: true
+
+- name: Ensure privilege separation directory exists
+  when: ansible_os_family == 'Debian'
+  file:
+    path: /run/sshd
+    state: directory
+    mode: 0750
+
+- name: "Fedora {{ crypto_policy }} crypto policy"
+  when: ansible_distribution == 'Fedora'
+  include_tasks: crypto_policy.yml
+
+- name: "Update {{ crypto_policy }} crypto policy"
+  when: distro_version in ['CentOS8','Ubuntu20']
+  include_tasks: crypto_policy.yml
+
+- name: Check if /etc/ssh/moduli contains weak Diffie-Hellman parameters
+  shell: awk '$5 < {{ min_dh_size }}' /etc/ssh/moduli
+  register: sshd_register_moduli
+  changed_when: false
+  check_mode: false
+
+- name: Deactivate short Diffie-Hellman moduli
+  when: sshd_register_moduli.stdout
+  shell: "awk '$5 >= {{ min_dh_size }}' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv -f /etc/ssh/moduli.tmp /etc/ssh/moduli"
+
+- name: Apply STRICT hardening for sshd
+  when:
+    - crypto_policy == 'STRICT'
+    - distro_version in ['CentOS8','Debian11']
+  include_tasks: "{{ distro_version }}.yml"
+
+- name: Apply STRICT hardening for sshd
+  when:
+    - crypto_policy == 'STRICT'
+    - distro_version not in ['CentOS8','Debian11']
+  include_tasks: sshd_crypto.yml
+
+- name: Ensure SSH server is started
+  systemd:
+    name: sshd
+    enabled: true
+    state: started
+  failed_when: false  # for initializing
+
+- block:
+    - name: Check the ed25519 host key
+      become: true
+      stat:
+        path: /etc/ssh/ssh_host_ed25519_key
+      register: ed25519
+
+    - name: Generate ed25519 host key
+      become: true
+      command: ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+      when:
+        - not ed25519.stat.exists|bool
+      notify: Restart sshd
+      changed_when: true
+
+    - name: Set host key permissions
+      become: true
+      file:
+        path: /etc/ssh/ssh_host_ed25519_key
+        mode: 0600
+
+    - name: Configure ed25519 host key
+      become: true
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
+        line: 'HostKey /etc/ssh/ssh_host_ed25519_key'
+        mode: 0600
+        state: present
+      notify: Restart sshd
+  when: crypto_policy == 'STRICT'
+
+- name: Disable weak host keys
+  when:
+    - crypto_policy == 'STRICT'
+    - weak_host_keys|length >= 1
+  include_tasks: weak_keys.yml
+  loop: "{{ weak_host_keys }}"
+...

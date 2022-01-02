@@ -1,0 +1,22 @@
+---
+
+- name: Restart sshd
+  debug:
+    msg: "checking /etc/ssh/sshd_config first"
+  changed_when: true
+  notify:
+    - Check sshd configuration
+    - Restart sshd - after config check
+
+- name: Check sshd configuration
+  become: true
+  command: '/usr/sbin/sshd -t'
+  register: sshd_config
+  changed_when: "sshd_config.rc != 0"
+
+- name: Restart sshd - after config check
+  become: true
+  service:
+    name: sshd
+    state: restarted
+...

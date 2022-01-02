@@ -1,0 +1,33 @@
+---
+
+- name: Install crypto-policies
+  package:
+    name: crypto-policies
+    state: present
+
+- name: Inquire which crypto policy is configured
+  command: "update-crypto-policies --show"
+  changed_when: false
+  register: current_policy
+
+- name: Install STRICT policy
+  when: crypto_policy == 'STRICT'
+  template:
+    src: STRICT.pol
+    dest: /usr/share/crypto-policies/policies/
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Ensure {{ crypto_policy }} policy is configured"
+  when: current_policy.stdout != crypto_policy
+  command: "update-crypto-policies --set {{ crypto_policy }}"
+  changed_when: true
+  notify: Restart sshd
+
+- name: Apply crypto policy (reboot recommended)
+  when: current_policy.stdout != crypto_policy
+  command: /bin/sh /usr/share/crypto-policies/reload-cmds.sh
+  changed_when: false
+
+...

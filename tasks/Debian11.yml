@@ -1,0 +1,23 @@
+---
+
+- name: Harden SSH configuration
+  lineinfile:
+    dest: /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    create: true
+    mode: 0640
+  loop:
+    - regexp: '^(#)?Ciphers'
+      line: "Ciphers {{ Ciphers }}"
+    - regexp: '^(#)?HostKeyAlgorithms'
+      line: "HostKeyAlgorithms {{ HostKeyAlgorithms }}"
+    - regexp: '^(#)?KexAlgorithms'
+      line: "KexAlgorithms {{ KexAlgorithms }}"
+    - regexp: '^(#)?MACs'
+      line: "MACs {{ MACs }}"
+      # - regexp: '^(#)?PubkeyAcceptedKeyTypes'
+      #  line: "PubkeyAcceptedKeyTypes {{ PubkeyAcceptedKeyTypes }}"
+  notify: Restart sshd
+...

@@ -1,0 +1,32 @@
+---
+# Standards: 0.2
+galaxy_info:
+  role_name: ansible_role_ssh
+  namespace: ansiblebook
+  author: Bas Meijer
+  description: Hardened SSH server
+  company: "O'Reilly"
+
+  license: MIT
+
+  min_ansible_version: 2.11.0
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Fedora
+      versions:
+        - ALL
+    - name: Ubuntu
+      versions:
+        - 20
+        - 18
+  galaxy_tags:
+    - system
+    - security
+    - hardening
+
+dependencies: []
+...
