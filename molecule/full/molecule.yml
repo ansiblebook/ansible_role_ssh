@@ -1,0 +1,62 @@
+---
+# Standards: 0.2
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: ssh-centos7
+    image: quay.io/centos/centos:7
+    command: /sbin/init
+    capabilities:
+      - CAP_NET_BIND_SERVICE
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: ssh-centos8
+    image: quay.io/centos/centos:stream8
+    command: /sbin/init
+    capabilities:
+      - CAP_NET_BIND_SERVICE
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: ssh-ubuntu
+    image: dokken/ubuntu-20.04
+    command: /lib/systemd/systemd
+    capabilities:
+      - CAP_NET_BIND_SERVICE
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+  - name: ssh-buster
+    image: dokken/debian-10
+    command: /sbin/init
+    capabilities:
+      - CAP_NET_BIND_SERVICE
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      stdout_callback: yaml
+      executable: /bin/bash
+verifier:
+  name: testinfra
+...
