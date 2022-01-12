@@ -25,19 +25,19 @@ pipeline {
         sh '(source /usr/local/bin/activate && molecule lint)'
       }
     }
-    stage ("Ansible Playbook") {
+    stage ("Playbook") {
       steps {
-        sh '(source /usr/local/bin/activate && molecule converge)'
+        sh '(source /usr/local/bin/activate && molecule converge -s jenkins)'
       }
     }
     stage ("Verification") {
       steps {
-        sh '(source /usr/local/bin/activate && molecule verify)'
+        sh '(source /usr/local/bin/activate && molecule verify) -s jenkins'
       }
     }
     stage ("Idempotency") {
       steps {
-        sh '(source /usr/local/bin/activate && molecule idempotence)'
+        sh '(source /usr/local/bin/activate && molecule idempotence -s jenkins)'
       }
     }
   }
