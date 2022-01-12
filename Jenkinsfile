@@ -28,6 +28,7 @@ pipeline {
     stage ("Playbook") {
       steps {
         sh '(source /usr/local/bin/activate && molecule converge -s jenkins)'
+
       }
     }
     stage ("Verification") {
