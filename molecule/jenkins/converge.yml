@@ -1,0 +1,9 @@
+---
+# Standards: 0.2
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Run ansible role"
+      include_role:
+        name: "workspace"
+...
