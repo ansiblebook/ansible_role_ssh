@@ -33,7 +33,7 @@ pipeline {
     }
     stage ("Verification") {
       steps {
-        sh '(source /usr/local/bin/activate && molecule verify) -s jenkins'
+        sh '(source /usr/local/bin/activate && molecule verify -s jenkins'
       }
     }
     stage ("Idempotency") {
