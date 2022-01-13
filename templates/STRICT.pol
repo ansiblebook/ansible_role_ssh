@@ -34,7 +34,7 @@ min_dtls_version = DTLS1.2
 # Parameter sizes
 min_dh_size = {{ min_dh_size }}
 min_dsa_size = 3072
-min_rsa_size = 3072
+min_rsa_size = 2048
 
 # GnuTLS only for now
 sha1_in_certs = 0

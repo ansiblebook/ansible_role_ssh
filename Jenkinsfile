@@ -5,8 +5,8 @@ pipeline {
     ansiColor('vga')
   }
   triggers {
-    cron 'H H * * *'
     pollSCM 'H/15 * * * *'
+    cron 'H H * * *'
   }
   stages {
     stage ("Build Environment") {

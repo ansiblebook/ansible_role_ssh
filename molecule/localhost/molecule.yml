@@ -1,0 +1,28 @@
+---
+# Standards: 0.2
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+  options:
+    managed: false
+    ansible_connection_options:
+      ansible_connection: local
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: localhost
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      stdout_callback: yaml
+      executable: /bin/bash
+  playbooks:
+    converge: ../resources/playbooks/converge.yml
+verifier:
+  name: testinfra
+  directory: ../resources/tests
+...
