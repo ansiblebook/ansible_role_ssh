@@ -27,4 +27,5 @@ provisioner:
       executable: /bin/bash
 verifier:
   name: testinfra
+  directory: ../resources/tests
 ...
