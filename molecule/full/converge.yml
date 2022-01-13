@@ -1,9 +1,0 @@
----
-# Standards: 0.2
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Run ansible_role_ssh"
-      include_role:
-        name: "ansible_role_ssh"
-...
