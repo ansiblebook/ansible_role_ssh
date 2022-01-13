@@ -4,6 +4,10 @@ pipeline {
     disableConcurrentBuilds()
     ansiColor('vga')
   }
+  triggers {
+    cron 'H H * * *'
+    pollSCM 'H/15 * * * *'
+  }
   stages {
     stage ("Build Environment") {
       steps {
