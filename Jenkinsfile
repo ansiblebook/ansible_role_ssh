@@ -1,10 +1,10 @@
 pipeline {
-   agent any
-   options {
-     disableConcurrentBuilds()
-     ansiColor('vga')
-   }
-   stages {
+  agent any
+  options {
+    disableConcurrentBuilds()
+    ansiColor('vga')
+  }
+  stages {
     stage ("Build Environment") {
       steps {
         sh '''
