@@ -34,8 +34,7 @@
   include_tasks: crypto_policy.yml
 
 - name: "Update {{ crypto_policy }} crypto policy"
-  when: distro_version in [ 'Red Hat
-Enterprise Linux', 'CentOS8','Ubuntu20','Rocky8']
+  when: distro_version in [ 'Red Hat Enterprise Linux', 'CentOS8','Ubuntu20','Rocky8']
   include_tasks: crypto_policy.yml
 
 - name: Check if /etc/ssh/moduli contains weak Diffie-Hellman parameters
@@ -51,15 +50,13 @@ Enterprise Linux', 'CentOS8','Ubuntu20','Rocky8']
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
-    - distro_version in [ 'Red Hat
-Enterprise Linux', 'CentOS8','Debian11','Rocky8']
+    - distro_version in [ 'Red Hat Enterprise Linux', 'CentOS8','Debian11','Rocky8']
   include_tasks: "strict_config.yml"
 
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
-    - distro_version not in [ 'Red Hat
-Enterprise Linux', 'CentOS8','Debian11','Rocky8']
+    - distro_version not in [ 'Red Hat Enterprise Linux', 'CentOS8','Debian11','Rocky8']
   include_tasks: sshd_crypto.yml
 
 - name: Ensure SSH server is started
