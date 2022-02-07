@@ -8,9 +8,8 @@
     msg: >-
       os_family:
       {{ ansible_os_family }},
-      distro:
-      {{ ansible_distribution }}
-      {{ ansible_distribution_version }}
+      distro_version:
+      {{ ansible_distribution }}{{ ansible_distribution_major_version }}
 
 - name: Set distro_version
   set_fact:
@@ -34,7 +33,7 @@
   include_tasks: crypto_policy.yml
 
 - name: "Update {{ crypto_policy }} crypto policy"
-  when: distro_version in [ 'RedHat', 'CentOS8','Ubuntu20','Rocky8']
+  when: distro_version in [ 'RedHat8', 'CentOS8','Ubuntu20','Rocky8']
   include_tasks: crypto_policy.yml
 
 - name: Check if /etc/ssh/moduli contains weak Diffie-Hellman parameters
@@ -50,13 +49,13 @@
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
-    - distro_version in [ 'RedHat', 'CentOS8','Debian11','Rocky8']
+    - distro_version in [ 'RedHat8', 'CentOS8','Debian11','Rocky8']
   include_tasks: "strict_config.yml"
 
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
-    - distro_version not in [ 'RedHat', 'CentOS8','Debian11','Rocky8']
+    - distro_version not in [ 'RedHat8', 'CentOS8','Debian11','Rocky8']
   include_tasks: sshd_crypto.yml
 
 - name: Ensure SSH server is started
