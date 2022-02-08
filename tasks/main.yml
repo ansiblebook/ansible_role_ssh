@@ -103,4 +103,15 @@
     - weak_host_keys|length >= 1
   include_tasks: weak_keys.yml
   loop: "{{ weak_host_keys }}"
+
+# See http://bada55.cr.yp.to/
+- name: Remove ed25519 host key in FIPS mode
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
+    mode: 0600
+    state: absent
+  notify: Restart sshd
+  when: crypto_policy in ['FIPS', 'FIPS:OSPP']
 ...
