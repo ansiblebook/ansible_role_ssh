@@ -32,13 +32,13 @@
 
 - name: SSH client uses strong entropy to seed (Bash-like shells)
   copy:
-    path: /etc/profile.d/cc-ssh-strong-rng.sh
+    dest: /etc/profile.d/cc-ssh-strong-rng.sh
     content: "export SSH_USE_STRONG_RNG=32\n"
     mode: 0644
 
 - name: SSH client uses strong entropy to seed (for CSH like shells)
   copy:
-    path: /etc/profile.d/cc-ssh-strong-rng.csh
+    dest: /etc/profile.d/cc-ssh-strong-rng.csh
     content: "setenv SSH_USE_STRONG_RNG 32\n"
     mode: 0644
 ...
