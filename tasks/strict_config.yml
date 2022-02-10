@@ -12,4 +12,13 @@
     create: true
     mode: 0640
   notify: Restart sshd
+
+- name: Configure strong entropy for sshd
+  lineinfile:
+    path: /etc/sysconfig/sshd
+    regexp: '^SSH_USE_STRONG_RNG'
+    line: 'SSH_USE_STRONG_RNG=32'
+    state: present
+    mode: 0640
+  notify: Start RNG Entropy Gatherer
 ...
