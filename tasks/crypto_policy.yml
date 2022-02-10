@@ -51,6 +51,7 @@
 - name: Configure RekeyLimit in ssh_config override
   lineinfile:
     dest: /etc/ssh/ssh_config.d/02-rekey-limit.conf
+    create: true
     regexp: '^(#)?RekeyLimit'
     line: 'RekeyLimit 1G 1h'
     state: present
