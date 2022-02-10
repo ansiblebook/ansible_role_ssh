@@ -19,4 +19,16 @@
   service:
     name: sshd
     state: restarted
+
+- name: Start RNG Entropy Gatherer
+  become: true
+  systemd:
+    name: rngd
+    state: restarted
+    enabled: true
+
+- name: Update crypto policies
+  become: true
+  command: update-crypto-policies
+  notify: Restart sshd
 ...
