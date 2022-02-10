@@ -41,4 +41,12 @@
     dest: /etc/profile.d/cc-ssh-strong-rng.csh
     content: "setenv SSH_USE_STRONG_RNG 32\n"
     mode: 0644
+
+- name: Configure RekeyLimit in SSH client
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    regexp: '^(#)?RekeyLimit'
+    line: 'RekeyLimit 1G 1h'
+    state: present
+      
 ...
