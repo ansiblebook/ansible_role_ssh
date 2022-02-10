@@ -46,6 +46,15 @@
   when: sshd_register_moduli.stdout
   shell: "awk '$5 >= {{ min_dh_size }}' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv -f /etc/ssh/moduli.tmp /etc/ssh/moduli"
 
+- name: Harden SSH configuration
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: '^(#)?Banner'
+      line: 'Banner /etc/issue'
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
@@ -57,6 +66,12 @@
     - crypto_policy == 'STRICT'
     - distro_version not in [ 'RedHat8', 'CentOS8','Debian11','Rocky8']
   include_tasks: sshd_crypto.yml
+
+- name: Create login banner
+  copy:
+    src: issue
+    dest: /etc/issue
+    mode: 0644
 
 - name: Ensure SSH server is started
   systemd:
