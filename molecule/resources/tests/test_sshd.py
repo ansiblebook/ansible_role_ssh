@@ -20,14 +20,5 @@ def test_sshd_running_and_enabled(host):
     assert sshd.is_enabled
 
 
-def test_sshd_config_file(host):
-    sshd_config = host.file("/etc/ssh/ssh_host_ed25519_key.pub")
-    assert sshd_config.contains("ssh-ed25519 ")
-    assert sshd_config.user == "root"
-    assert sshd_config.group == "root"
-    assert sshd_config.mode == 0o644
-
-
 def test_ssh_user(host):
     assert host.user("sshd").exists
-

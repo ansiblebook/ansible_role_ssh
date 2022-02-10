@@ -8,6 +8,7 @@ lint: |
   set -e
   yamllint .
   ansible-lint
+  flake8
 platforms:
   - name: ssh-centos7
     image: quay.io/centos/centos:7
