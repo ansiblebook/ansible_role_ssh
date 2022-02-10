@@ -42,9 +42,15 @@
     content: "setenv SSH_USE_STRONG_RNG 32\n"
     mode: 0644
 
-- name: Configure RekeyLimit in SSH client
+- name: Remove RekeyLimit from ssh_config
   lineinfile:
     dest: /etc/ssh/ssh_config
+    regexp: '^(#)?RekeyLimit'
+    state: absent
+
+- name: Configure RekeyLimit in ssh_config override
+  lineinfile:
+    dest: /etc/ssh/ssh_config.d/02-rekey-limit.conf
     regexp: '^(#)?RekeyLimit'
     line: 'RekeyLimit 1G 1h'
     state: present
