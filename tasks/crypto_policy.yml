@@ -2,7 +2,9 @@
 
 - name: Install crypto-policies
   package:
-    name: crypto-policies
+    name:
+      - crypto-policies
+      - rng-tools
     state: present
 
 - name: Inquire which crypto policy is configured
