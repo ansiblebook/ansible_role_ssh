@@ -35,12 +35,12 @@ Crypto policies were introduced in Fedora 21 and are also used in RHEL8, Centos 
 
 ## Algorithm recommendations
 
-The recommended crypto is configured in `vars/main.yml`. Check legal with your compliance officer.
+The recommended crypto is configured when the `STRICT` crypto_policy is selected:
 
-- `Ciphers`
-- `HostKeyAlgorithms`
-- `KexAlgorithms`
-- `MACs`
+- `Ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr`
+- `HostKeyAlgorithms: ssh-ed25519-cert-v01@openssh.com,ssh-ed25519`
+- `KexAlgorithms: curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256`
+- `MACs: hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com`
 
 ## Default Variables
 
