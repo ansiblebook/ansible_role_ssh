@@ -5,7 +5,7 @@ Improve the security settings of the [OpenSSH](https://www.openssh.com/) SSH ser
 
 The countries in which your servers currently reside may have restrictions on the import, possession, use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check your country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted. See http://www.wassenaar.org/ for more information.
 
-## What does this role change?
+# What does this role change?
 
 This role is based on audit findings using [ssh-audit](https://github.com/jtesta/ssh-audit). This role will improve the crypto of your ssh server to more secure and faster settings.
 
@@ -49,7 +49,7 @@ The recommended crypto is configured in `vars/main.yml`. Check legal with your c
 The recommended default is configured in `defaults/main.yml`.
 `min_dh_size: '3072'` Minimal Diffie Hellmann moduli size.
 
-## Hardening guides
+# Hardening guides
 
 - https://www.sshaudit.com/hardening_guides.html
 - https://infosec.mozilla.org/guidelines/openssh.html
