@@ -9,19 +9,17 @@ The countries in which your servers currently reside may have restrictions on th
 
 This role is based on audit findings using [ssh-audit](https://github.com/jtesta/ssh-audit). This role will improve the crypto of your ssh server to more secure and faster settings.
 
-When crypto policies are available the configured policy is set and activated, although a reboot is recommended.
-
-The  Diffie Hellmann moduli size for sshd is adjusted to modern standards.
-
-Host keys are re-configured from RSA to ED25519, this is faster and more secure. An RSA host key is now considered weak [source](https://eprint.iacr.org/2020/014.pdf).
-
-RSA and ECDSA host keys are disabled in sshd.
+- When crypto policies are available the configured policy is set and activated, although a reboot is recommended.
+- Crypto is configured in way that ssh-audit passes without warnings.
+- The  Diffie Hellmann moduli size for sshd is adjusted to modern standards.
+- Host keys are re-configured from RSA to ED25519, this is faster and more secure. An RSA host key is now considered weak [source](https://eprint.iacr.org/2020/014.pdf).
+- RSA and ECDSA host keys are disabled in sshd.
 
 ## Crypto Policies
 
 Crypto policies were introduced in Fedora 21 and are also used in RHEL8, Centos Stream, Ubuntu 20. The STRICT policy template defines modern crypto for SSH and TLS that is stronger than FIPS:OSPP. The configured crypto policy will be system-wide for all applications. You can configure the policies present on your system too, but this role installs the STRICT crypto policy by default.
 
-## Possible values
+### Possible crypto_policy values
 
 `crypto_policy: 'STRICT'` Recommended for high-security systems.
 
