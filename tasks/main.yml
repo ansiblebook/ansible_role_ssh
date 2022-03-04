@@ -55,6 +55,7 @@
   with_items:
     - regexp: '^(#)?Banner'
       line: 'Banner /etc/issue'
+
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
