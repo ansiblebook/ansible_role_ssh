@@ -13,7 +13,7 @@ When crypto policies are available the configured policy is set and activated, a
 
 The  Diffie Hellmann moduli size for sshd is adjusted to modern standards.
 
-Host keys are re-configured from RSA to ED25519, this is faster and [more secure](http://safecurves.cr.yp.to/). An RSA host key is now considered weak [source](https://eprint.iacr.org/2020/014.pdf).
+Host keys are re-configured from RSA to ED25519, this is faster and more secure. An RSA host key is now considered weak [source](https://eprint.iacr.org/2020/014.pdf).
 
 RSA and ECDSA host keys are disabled in sshd.
 
