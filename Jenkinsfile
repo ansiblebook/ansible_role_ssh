@@ -37,12 +37,12 @@ pipeline {
     }
     stage ("Verification") {
       steps {
-        sh '(source /usr/local/bin/activate && molecule verify -s jenkins)'
+        sh '(source /usr/local/bin/activate && molecule verify)'
       }
     }
     stage ("Idempotency") {
       steps {
-        sh '(source /usr/local/bin/activate && molecule idempotence -s jenkins)'
+        sh '(source /usr/local/bin/activate && molecule idempotence)'
       }
     }
   }
