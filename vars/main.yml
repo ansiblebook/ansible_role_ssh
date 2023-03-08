@@ -3,6 +3,7 @@
 ssh_packages:
   - openssh-server
   - crypto-policies
+  - crypto-policies-scripts
 
 # Feb. 9, 2020: Host key type 'ssh-rsa' is now considered weak
 # https://eprint.iacr.org/2020/014.pdf

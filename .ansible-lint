@@ -1,4 +1,6 @@
 ---
 skip_list:
   - experimental  # all rules tagged as experimental
+  - fqcn-builtins  # Use FQCN for builtin actions.
+  - unnamed-task  # All tasks should be named.
 ...
