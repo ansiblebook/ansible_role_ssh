@@ -1,7 +1,6 @@
 ---
 
 - name: Remove weak keys from sshd_config
-  become: true
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: 'HostKey /etc/ssh/{{ item }}'
@@ -10,7 +9,6 @@
   notify: Restart sshd
 
 - name: "Check weak key presence for {{ item }}"
-  become: true
   ansible.builtin.stat:
     path: "/etc/ssh/{{ item }}"
   register:
@@ -18,7 +16,6 @@
 
 # Weak keys have weak permissions so sshd ignores them.
 - name: "Disable weak host key {{ item }}"
-  become: true
   when:
     - weak_key_found.stat.exists is defined
     - weak_key_found.stat.exists|bool

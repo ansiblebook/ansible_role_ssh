@@ -84,13 +84,11 @@
 - name: Manage ed25519 host key
   block:
     - name: Check the ed25519 host key
-      become: true
       ansible.builtin.stat:
         path: /etc/ssh/ssh_host_ed25519_key
       register: ed25519
 
     - name: Generate ed25519 host key
-      become: true
       ansible.builtin.command: ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
       when:
         - not ed25519.stat.exists|bool
@@ -98,13 +96,11 @@
       changed_when: true
 
     - name: Set host key permissions
-      become: true
       ansible.builtin.file:
         path: /etc/ssh/ssh_host_ed25519_key
         mode: 0600
 
     - name: Configure ed25519 host key
-      become: true
       ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config
         regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
@@ -123,7 +119,6 @@
 
 # See http://bada55.cr.yp.to/
 - name: Remove ed25519 host key in FIPS mode
-  become: true
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'

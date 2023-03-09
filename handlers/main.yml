@@ -9,26 +9,22 @@
     - Restart sshd - after config check
 
 - name: Check sshd configuration
-  become: true
   ansible.builtin.command: '/usr/sbin/sshd -t'
   register: sshd_config
   changed_when: "sshd_config.rc != 0"
 
 - name: Restart sshd - after config check
-  become: true
   ansible.builtin.service:
     name: sshd
     state: restarted
 
 - name: Start RNG Entropy Gatherer
-  become: true
   ansible.builtin.systemd:
     name: rngd
     state: restarted
     enabled: true
 
 - name: Update crypto policies
-  become: true
   ansible.builtin.command: update-crypto-policies
   notify: Restart sshd
 ...
