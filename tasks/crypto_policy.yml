@@ -1,20 +1,22 @@
 ---
 
 - name: Install crypto-policies
-  package:
+  ansible.builtin.package:
     name:
       - crypto-policies
+      - crypto-policies-scripts
       - rng-tools
     state: present
+  ignore_errors: true
 
 - name: Inquire which crypto policy is configured
-  command: "update-crypto-policies --show"
+  ansible.builtin.command: "update-crypto-policies --show"
   changed_when: false
   register: current_policy
 
 - name: Install STRICT policy
   when: crypto_policy == 'STRICT'
-  template:
+  ansible.builtin.template:
     src: STRICT.pol
     dest: /usr/share/crypto-policies/policies/
     owner: root
@@ -23,35 +25,35 @@
 
 - name: "Ensure {{ crypto_policy }} policy is configured"
   when: current_policy.stdout != crypto_policy
-  command: "update-crypto-policies --set {{ crypto_policy }}"
+  ansible.builtin.command: "update-crypto-policies --set {{ crypto_policy }}"
   changed_when: true
   notify: Restart sshd
 
 - name: Apply crypto policy (reboot recommended)
   when: current_policy.stdout != crypto_policy
-  command: /bin/sh /usr/share/crypto-policies/reload-cmds.sh
+  ansible.builtin.command: /bin/sh /usr/share/crypto-policies/reload-cmds.sh
   changed_when: false
 
 - name: SSH client uses strong entropy to seed (Bash-like shells)
-  copy:
+  ansible.builtin.copy:
     dest: /etc/profile.d/cc-ssh-strong-rng.sh
     content: "export SSH_USE_STRONG_RNG=32\n"
     mode: 0644
 
 - name: SSH client uses strong entropy to seed (for CSH like shells)
-  copy:
+  ansible.builtin.copy:
     dest: /etc/profile.d/cc-ssh-strong-rng.csh
     content: "setenv SSH_USE_STRONG_RNG 32\n"
     mode: 0644
 
 - name: Remove RekeyLimit from ssh_config
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/ssh_config
     regexp: '^(#)?RekeyLimit'
     state: absent
 
 - name: Configure RekeyLimit in ssh_config override
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/ssh_config.d/02-rekey-limit.conf
     create: true
     regexp: '^(#)?RekeyLimit'

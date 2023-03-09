@@ -4,7 +4,7 @@
 # update-crypto-policies on RHEL 8.5 leaves weak algorithms due
 # to the implementation in the python script.
 - name: Override CRYPTO_POLICY for sshd
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
     regex: '^CRYPTO_POLICY'
     line: "CRYPTO_POLICY='-oCiphers={{ Ciphers }} -oMACs={{ MACs }} -oKexAlgorithms={{ KexAlgorithms }} -oHostKeyAlgorithms={{ HostKeyAlgorithms }}'"
@@ -14,7 +14,7 @@
   notify: Restart sshd
 
 - name: Configure strong entropy for sshd
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
     regexp: '^SSH_USE_STRONG_RNG'
     line: 'SSH_USE_STRONG_RNG=32'
