@@ -1,7 +1,7 @@
 ---
 
 - name: Restart sshd
-  debug:
+  ansible.builtin.debug:
     msg: "checking /etc/ssh/sshd_config first"
   changed_when: true
   notify:
@@ -9,26 +9,22 @@
     - Restart sshd - after config check
 
 - name: Check sshd configuration
-  become: true
-  command: '/usr/sbin/sshd -t'
+  ansible.builtin.command: '/usr/sbin/sshd -t'
   register: sshd_config
   changed_when: "sshd_config.rc != 0"
 
 - name: Restart sshd - after config check
-  become: true
-  service:
+  ansible.builtin.service:
     name: sshd
     state: restarted
 
 - name: Start RNG Entropy Gatherer
-  become: true
-  systemd:
+  ansible.builtin.systemd:
     name: rngd
     state: restarted
     enabled: true
 
 - name: Update crypto policies
-  become: true
-  command: update-crypto-policies
+  ansible.builtin.command: update-crypto-policies
   notify: Restart sshd
 ...

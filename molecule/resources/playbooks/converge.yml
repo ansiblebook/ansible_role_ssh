@@ -2,9 +2,12 @@
 # Standards: 0.2
 - name: Converge
   hosts: all
-  become: true
+
+  vars:
+    role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+
   tasks:
-    - name: "Run ansible_role_ssh"
-      include_role:
-        name: "ansible_role_ssh"
+    - name: "Include {{ role_name }}"
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"
 ...

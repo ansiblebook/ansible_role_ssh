@@ -4,6 +4,6 @@
   hosts: all
   tasks:
     - name: "Run ansible role"
-      include_role:
+      ansible.builtin.include_role:
         name: "workspace"
 ...

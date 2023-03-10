@@ -1,7 +1,7 @@
 ---
 
 - name: Harden crypto in sshd_config
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
