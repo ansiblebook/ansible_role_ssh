@@ -5,9 +5,7 @@
     name:
       - crypto-policies
       - crypto-policies-scripts
-      - rng-tools
     state: present
-  ignore_errors: true
 
 - name: Inquire which crypto policy is configured
   ansible.builtin.command: "update-crypto-policies --show"

@@ -33,7 +33,7 @@ provisioner:
       executable: /bin/bash
   playbooks:
     converge: ../resources/playbooks/converge.yml
+    verify: ../resources/playbooks/verify.yml
 verifier:
-  name: testinfra
-  directory: ../resources/tests
+  name: ansible
 ...

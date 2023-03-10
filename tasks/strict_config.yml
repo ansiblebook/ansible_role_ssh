@@ -13,6 +13,14 @@
     mode: 0640
   notify: Restart sshd
 
+- name: Install rgn-tools for entropy, if available
+  ansible.builtin.package:
+    name:
+      - rng-tools
+    state: present
+  ignore_errors: true  # when a repo doesn't list it
+  register: entropy
+
 - name: Configure strong entropy for sshd
   ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
@@ -20,5 +28,6 @@
     line: 'SSH_USE_STRONG_RNG=32'
     state: present
     mode: 0640
+  when: entropy.changed | bool  # noqa no-handler
   notify: Start RNG Entropy Gatherer
 ...

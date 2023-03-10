@@ -74,13 +74,6 @@
     dest: /etc/issue
     mode: 0644
 
-- name: Ensure SSH server is started
-  ansible.builtin.systemd:
-    name: sshd
-    enabled: true
-    state: started
-  failed_when: false  # for initializing
-
 - name: Manage ed25519 host key
   block:
     - name: Check the ed25519 host key
@@ -89,11 +82,14 @@
       register: ed25519
 
     - name: Generate ed25519 host key
-      ansible.builtin.command: ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+      ansible.builtin.systemd:
+        name: sshd-keygen@ed25519.service
+        state: started
+        masked: false
+        enabled: true
       when:
         - not ed25519.stat.exists|bool
       notify: Restart sshd
-      changed_when: true
 
     - name: Set host key permissions
       ansible.builtin.file:
