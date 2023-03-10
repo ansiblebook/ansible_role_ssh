@@ -4,7 +4,7 @@
 # update-crypto-policies on RHEL 8.5 leaves weak algorithms due
 # to the implementation in the python script.
 - name: Override CRYPTO_POLICY for sshd
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
     regex: '^CRYPTO_POLICY'
     line: "CRYPTO_POLICY='-oCiphers={{ Ciphers }} -oMACs={{ MACs }} -oKexAlgorithms={{ KexAlgorithms }} -oHostKeyAlgorithms={{ HostKeyAlgorithms }}'"
@@ -13,12 +13,21 @@
     mode: 0640
   notify: Restart sshd
 
+- name: Install rgn-tools for entropy, if available
+  ansible.builtin.package:
+    name:
+      - rng-tools
+    state: present
+  ignore_errors: true  # when a repo doesn't list it
+  register: entropy
+
 - name: Configure strong entropy for sshd
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
     regexp: '^SSH_USE_STRONG_RNG'
     line: 'SSH_USE_STRONG_RNG=32'
     state: present
     mode: 0640
+  when: entropy.changed | bool  # noqa no-handler
   notify: Start RNG Entropy Gatherer
 ...

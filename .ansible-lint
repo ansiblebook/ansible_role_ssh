@@ -1,6 +1,7 @@
 ---
+# https://ansible-lint.readthedocs.io/en/latest/default_rules/
+exclude_paths:
+  - ./.github
+  - ./.vscode
 skip_list:
   - experimental  # all rules tagged as experimental
-  - fqcn-builtins  # Use FQCN for builtin actions.
-  - unnamed-task  # All tasks should be named.
-...

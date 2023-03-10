@@ -10,14 +10,15 @@ lint: |
   ansible-lint
   flake8
 platforms:
-  - name: ssh-centos8
-    image: quay.io/centos/centos:stream8
-    command: /sbin/init
+  - name: ssh-ubi8
+    image: registry.access.redhat.com/ubi8/ubi-init
+    pre_build_image: true
+    command: /usr/sbin/init
     cgroupns_mode: host
     capabilities:
       - SYS_ADMIN
     published_ports:
-      - 127.0.0.1:2258:22
+      - 127.0.0.1:2211:22
     tmpfs:
       - /run
       - /tmp
@@ -32,7 +33,7 @@ provisioner:
       executable: /bin/bash
   playbooks:
     converge: ../resources/playbooks/converge.yml
+    verify: ../resources/playbooks/verify.yml
 verifier:
-  name: testinfra
-  directory: ../resources/tests
+  name: ansible
 ...

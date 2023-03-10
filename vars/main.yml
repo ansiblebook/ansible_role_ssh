@@ -9,8 +9,8 @@ ssh_packages:
 # https://eprint.iacr.org/2020/014.pdf
 # More info https://www.openssh.com/txt/release-8.2
 weak_host_keys:
-  - ssh_host_rsa_key
-  - ssh_host_ecdsa_key
+  - rsa
+  - ecdsa
 
 # https://www.ssh-audit.com/hardening_guides.html
 
@@ -18,7 +18,7 @@ Ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh
 
 HostKeyAlgorithms: ssh-ed25519-cert-v01@openssh.com,ssh-ed25519
 # This is a compatible subset
-KexAlgorithms: curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+KexAlgorithms: curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,diffie-hellman-group-exchange-sha256
 
 MACs: hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
 

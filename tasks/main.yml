@@ -1,10 +1,10 @@
 ---
 # yamllint disable rule:line-length
 - name: Setup
-  setup:
+  ansible.builtin.setup:
 
 - name: Print out operating system details
-  debug:
+  ansible.builtin.debug:
     msg: >-
       os_family:
       {{ ansible_os_family }},
@@ -12,42 +12,42 @@
       {{ ansible_distribution }}{{ ansible_distribution_major_version }}
 
 - name: Set distro_version
-  set_fact:
+  ansible.builtin.set_fact:
     distro_version: "{{ ansible_distribution }}{{ ansible_distribution_major_version }}"
 
 - name: Install SSH server
-  package:
+  ansible.builtin.package:
     name: openssh-server
     state: present
     update_cache: true
 
 - name: Ensure privilege separation directory exists
   when: ansible_os_family == 'Debian'
-  file:
+  ansible.builtin.file:
     path: /run/sshd
     state: directory
     mode: 0750
 
 - name: "Fedora {{ crypto_policy }} crypto policy"
   when: ansible_distribution == 'Fedora'
-  include_tasks: crypto_policy.yml
+  ansible.builtin.include_tasks: crypto_policy.yml
 
 - name: "Update {{ crypto_policy }} crypto policy"
   when: distro_version in [ 'RedHat8', 'CentOS8', 'AlmaLinux8', 'Ubuntu20', 'Rocky8']
-  include_tasks: crypto_policy.yml
+  ansible.builtin.include_tasks: crypto_policy.yml
 
 - name: Check if /etc/ssh/moduli contains weak Diffie-Hellman parameters
-  shell: awk '$5 < {{ min_dh_size }}' /etc/ssh/moduli
+  ansible.builtin.shell: awk '$5 < {{ min_dh_size }}' /etc/ssh/moduli
   register: sshd_register_moduli
   changed_when: false
   check_mode: false
 
 - name: Deactivate short Diffie-Hellman moduli
   when: sshd_register_moduli.stdout
-  shell: "awk '$5 >= {{ min_dh_size }}' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv -f /etc/ssh/moduli.tmp /etc/ssh/moduli"
+  ansible.builtin.shell: "awk '$5 >= {{ min_dh_size }}' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv -f /etc/ssh/moduli.tmp /etc/ssh/moduli"
 
 - name: Harden SSH configuration
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
@@ -60,51 +60,44 @@
   when:
     - crypto_policy == 'STRICT'
     - distro_version in [ 'RedHat8', 'CentOS8', 'AlmaLinux8', 'Debian11', 'Rocky8']
-  include_tasks: "strict_config.yml"
+  ansible.builtin.include_tasks: "strict_config.yml"
 
 - name: Apply STRICT hardening for sshd
   when:
     - crypto_policy == 'STRICT'
     - distro_version not in [ 'RedHat8', 'CentOS8', 'AlmaLinux8', 'Debian11', 'Rocky8']
-  include_tasks: sshd_crypto.yml
+  ansible.builtin.include_tasks: sshd_crypto.yml
 
 - name: Create login banner
-  copy:
+  ansible.builtin.copy:
     src: issue
     dest: /etc/issue
     mode: 0644
 
-- name: Ensure SSH server is started
-  systemd:
-    name: sshd
-    enabled: true
-    state: started
-  failed_when: false  # for initializing
-
-- block:
+- name: Manage ed25519 host key
+  block:
     - name: Check the ed25519 host key
-      become: true
-      stat:
+      ansible.builtin.stat:
         path: /etc/ssh/ssh_host_ed25519_key
       register: ed25519
 
     - name: Generate ed25519 host key
-      become: true
-      command: ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+      ansible.builtin.systemd:
+        name: sshd-keygen@ed25519.service
+        state: started
+        masked: false
+        enabled: true
       when:
         - not ed25519.stat.exists|bool
       notify: Restart sshd
-      changed_when: true
 
     - name: Set host key permissions
-      become: true
-      file:
+      ansible.builtin.file:
         path: /etc/ssh/ssh_host_ed25519_key
         mode: 0600
 
     - name: Configure ed25519 host key
-      become: true
-      lineinfile:
+      ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config
         regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
         line: 'HostKey /etc/ssh/ssh_host_ed25519_key'
@@ -122,8 +115,7 @@
 
 # See http://bada55.cr.yp.to/
 - name: Remove ed25519 host key in FIPS mode
-  become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
     mode: 0600

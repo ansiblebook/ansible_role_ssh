@@ -1,0 +1,23 @@
+---
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+
+- name: Assert package is installed
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - "'{{ item }}' in ansible_facts.packages"
+  loop: "{{ ssh_packages }}"
+
+- name: Gather service facts
+  ansible.builtin.service_facts:
+
+- name: Assert that service is OK
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - ansible_facts.services['sshd.service'].status == 'enabled'
+      - ansible_facts.services['sshd.service'].state == 'running'
+      - ansible_facts.services['sshd-keygen@ecdsa.service'].status == 'masked'
+      - ansible_facts.services['sshd-keygen@rsa.service'].status == 'masked'

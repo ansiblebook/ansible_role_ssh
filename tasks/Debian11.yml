@@ -1,7 +1,7 @@
 ---
 
 - name: Harden SSH configuration
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"

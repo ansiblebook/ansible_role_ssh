@@ -1,28 +1,26 @@
 ---
 
-- name: Remove weak keys from sshd_config
-  become: true
-  lineinfile:
+- name: "Mask generation of {{ item }} host key"
+  ansible.builtin.systemd:
+    name: "{{ hostkey }}"
+    masked: true
+  loop:
+    - sshd-keygen@ecdsa.service
+    - sshd-keygen@rsa.service
+  loop_control:
+    loop_var: hostkey
+
+- name: Remove {{ item }} host key from sshd_config
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
-    regexp: 'HostKey /etc/ssh/{{ item }}'
-    line: 'HostKey /etc/ssh/{{ item }}'
+    regexp: "HostKey /etc/ssh/ssh_host_{{ item }}_key"
+    line: "HostKey /etc/ssh/ssh_host_{{ item }}_key"
     state: absent
   notify: Restart sshd
 
-- name: "Check weak key presence for {{ item }}"
-  become: true
-  stat:
-    path: "/etc/ssh/{{ item }}"
-  register:
-    weak_key_found
+- name: "Remove {{ item }} host key"
+  ansible.builtin.file:
+    path: "/etc/ssh/ssh_host_{{ item }}_key"
+    state: absent
 
-# Weak keys have weak permissions so sshd ignores them.
-- name: "Disable weak host key {{ item }}"
-  become: true
-  when:
-    - weak_key_found.stat.exists is defined
-    - weak_key_found.stat.exists|bool
-  file:
-    path: "/etc/ssh/{{ item }}"
-    mode: 0666
 ...

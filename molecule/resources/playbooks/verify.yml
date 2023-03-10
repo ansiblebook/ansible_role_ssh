@@ -1,6 +1,6 @@
 ---
 # Standards: 0.2
-- name: Converge
+- name: Verify
   hosts: all
 
   vars:
@@ -10,4 +10,5 @@
     - name: "Include {{ role_name }}"
       ansible.builtin.include_role:
         name: "{{ role_name }}"
+        tasks_from: verify
 ...
