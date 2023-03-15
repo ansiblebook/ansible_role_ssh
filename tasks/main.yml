@@ -55,8 +55,20 @@
   loop:
     - regexp: '^(#)?Banner'
       line: 'Banner /etc/issue'
+    - regexp: '^(#)?IgnoreRhosts'
+      line: 'IgnoreRhosts yes'
+    - regexp: '^(#)?LoginGraceTime'
+      line: "LoginGraceTime 60"
     - regexp: '^(#)?LogLevel'
       line: 'LogLevel VERBOSE'
+    - regexp: '^(#)?X11Forwarding'
+      line: 'X11Forwarding no'
+    - regexp: '^(#)?AllowTcpForwarding'
+      line: "AllowTcpForwarding {{ allow_tcp_forwarding }}"
+    - regexp: '^(#)?MaxAuthTries \d'
+      line: 'MaxAuthTries 4'
+    - regexp: '^(#)?MaxSessions'
+      line: "MaxSessions 10"
   notify: Restart sshd
 
 - name: Apply STRICT hardening for sshd

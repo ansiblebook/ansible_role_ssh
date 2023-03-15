@@ -1,6 +1,9 @@
 ---
 # DEFAULT LEGACY FIPS FUTURE
 crypto_policy: 'STRICT'
+
+allow_tcp_forwarding: 'no'
+
 # Diffie Hellmann moduli size
 min_dh_size: '3072'
 ...
