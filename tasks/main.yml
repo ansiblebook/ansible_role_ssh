@@ -52,9 +52,12 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
-  with_items:
+  loop:
     - regexp: '^(#)?Banner'
       line: 'Banner /etc/issue'
+    - regexp: '^(#)?LogLevel'
+      line: 'LogLevel VERBOSE'
+  notify: Restart sshd
 
 - name: Apply STRICT hardening for sshd
   when:
@@ -122,4 +125,5 @@
     state: absent
   notify: Restart sshd
   when: crypto_policy in ['FIPS', 'FIPS:OSPP']
+
 ...
