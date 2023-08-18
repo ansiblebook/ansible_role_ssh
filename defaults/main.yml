@@ -3,6 +3,7 @@
 crypto_policy: 'STRICT'
 
 allow_tcp_forwarding: 'no'
+allow_agent_forwarding: 'no'
 
 # Diffie Hellmann moduli size
 min_dh_size: '3072'
