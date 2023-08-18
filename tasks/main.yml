@@ -65,10 +65,14 @@
       line: 'X11Forwarding no'
     - regexp: '^(#)?AllowTcpForwarding'
       line: "AllowTcpForwarding {{ allow_tcp_forwarding }}"
+    - regexp: '^(#)?AllowAgentForwarding'
+      line: "AllowAgentForwarding {{ allow_agent_forwarding }}"
     - regexp: '^(#)?MaxAuthTries \d'
-      line: 'MaxAuthTries 4'
+      line: 'MaxAuthTries 3'
     - regexp: '^(#)?MaxSessions'
-      line: "MaxSessions 10"
+      line: "MaxSessions 2"
+    - regexp: '^(#)?TCPKeepAlive'
+      line: "TCPKeepAlive no"
   notify: Restart sshd
 
 - name: Apply STRICT hardening for sshd
