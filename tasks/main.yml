@@ -55,6 +55,8 @@
   loop:
     - regexp: '^(#)?Banner'
       line: 'Banner /etc/issue'
+    - regexp: '^(#)?ClientAliveInterval'
+      line: "ClientAliveInterval {{ client_alive_interval }}"
     - regexp: '^(#)?IgnoreRhosts'
       line: 'IgnoreRhosts yes'
     - regexp: '^(#)?LoginGraceTime'
