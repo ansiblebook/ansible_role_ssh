@@ -93,6 +93,12 @@
     dest: /etc/issue
     mode: 0644
 
+- name: Create login banner
+  ansible.builtin.copy:
+    src: issue
+    dest: /etc/issue.net
+    mode: 0644
+
 - name: Manage ed25519 host key
   block:
     - name: Check the ed25519 host key
