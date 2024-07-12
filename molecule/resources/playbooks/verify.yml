@@ -4,11 +4,11 @@
   hosts: all
 
   vars:
-    role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+    this_role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
 
   tasks:
-    - name: "Include {{ role_name }}"
+    - name: "Include {{ this_role }}"
       ansible.builtin.include_role:
-        name: "{{ role_name }}"
+        name: "{{ this_role }}"
         tasks_from: verify
 ...
