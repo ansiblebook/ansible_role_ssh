@@ -1,6 +1,6 @@
 ---
 
-- name: "Mask generation of {{ item }} host key"
+- name: "Mask generation of host key {{ item }}"
   ansible.builtin.systemd:
     name: "{{ hostkey }}"
     masked: true
@@ -10,7 +10,7 @@
   loop_control:
     loop_var: hostkey
 
-- name: Remove {{ item }} host key from sshd_config
+- name: "Remove host key from sshd_config {{ item }}"
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "HostKey /etc/ssh/ssh_host_{{ item }}_key"
@@ -18,7 +18,7 @@
     state: absent
   notify: Restart sshd
 
-- name: "Remove {{ item }} host key"
+- name: "Remove host key {{ item }}"
   ansible.builtin.file:
     path: "/etc/ssh/ssh_host_{{ item }}_key"
     state: absent

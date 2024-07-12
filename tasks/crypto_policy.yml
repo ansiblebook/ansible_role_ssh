@@ -21,7 +21,7 @@
     group: root
     mode: 0644
 
-- name: "Ensure {{ crypto_policy }} policy is configured"
+- name: "Ensure crypto-policy {{ crypto_policy }}"
   when: current_policy.stdout != crypto_policy
   ansible.builtin.command: "update-crypto-policies --set {{ crypto_policy }}"
   changed_when: true

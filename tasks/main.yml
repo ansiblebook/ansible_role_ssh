@@ -28,11 +28,11 @@
     state: directory
     mode: 0750
 
-- name: "Fedora {{ crypto_policy }} crypto policy"
+- name: "Fedora crypto-policy {{ crypto_policy }}"
   when: ansible_distribution == 'Fedora'
   ansible.builtin.include_tasks: crypto_policy.yml
 
-- name: "Update {{ crypto_policy }} crypto policy"
+- name: "Update crypto-policy {{ crypto_policy }}"
   when: distro_version in [ 'RedHat8', 'CentOS8', 'AlmaLinux8', 'Ubuntu20', 'Rocky8']
   ansible.builtin.include_tasks: crypto_policy.yml
 
