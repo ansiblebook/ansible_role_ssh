@@ -45,6 +45,7 @@
 - name: Deactivate short Diffie-Hellman moduli
   when: sshd_register_moduli.stdout
   ansible.builtin.shell: "awk '$5 >= {{ min_dh_size }}' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv -f /etc/ssh/moduli.tmp /etc/ssh/moduli"
+  changed_when: sshd_register_moduli.stdout
 
 - name: Harden SSH configuration
   ansible.builtin.lineinfile:
