@@ -27,4 +27,5 @@
 - name: Update crypto policies
   ansible.builtin.command: update-crypto-policies
   notify: Restart sshd
+  changed_when: true
 ...
