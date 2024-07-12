@@ -137,7 +137,7 @@
   when:
     - crypto_policy == 'STRICT'
     - weak_host_keys|length >= 1
-  include_tasks: weak_keys.yml
+  ansible.builtin.include_tasks: weak_keys.yml
   loop: "{{ weak_host_keys }}"
 
 # See http://bada55.cr.yp.to/
