@@ -7,17 +7,15 @@
     line: "{{ item.line }}"
     state: present
     create: true
-    mode: 0640
+    mode: '0640'
   loop:
     - regexp: '^(#)?Ciphers'
-      line: "Ciphers {{ Ciphers }}"
+      line: "Ciphers {{ ciphers }}"
     - regexp: '^(#)?HostKeyAlgorithms'
-      line: "HostKeyAlgorithms {{ HostKeyAlgorithms }}"
+      line: "HostKeyAlgorithms {{ host_key_algorithms }}"
     - regexp: '^(#)?KexAlgorithms'
-      line: "KexAlgorithms {{ KexAlgorithms }}"
+      line: "KexAlgorithms {{ kex_algorithms }}"
     - regexp: '^(#)?MACs'
-      line: "MACs {{ MACs }}"
-      # - regexp: '^(#)?PubkeyAcceptedKeyTypes'
-      #  line: "PubkeyAcceptedKeyTypes {{ PubkeyAcceptedKeyTypes }}"
+      line: "MACs {{ macs }}"
   notify: Restart sshd
 ...

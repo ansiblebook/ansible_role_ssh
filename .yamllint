@@ -9,6 +9,9 @@ rules:
   brackets:
     max-spaces-inside: 1
     level: error
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
   indentation:
     indent-sequences: consistent
     spaces: 2
@@ -20,6 +23,9 @@ rules:
   new-line-at-end-of-file: enable
   new-lines:
     type: unix
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
   trailing-spaces: enable
   truthy:
     allowed-values: ['true', 'false']

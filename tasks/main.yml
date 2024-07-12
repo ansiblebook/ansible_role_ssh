@@ -26,7 +26,7 @@
   ansible.builtin.file:
     path: /run/sshd
     state: directory
-    mode: 0750
+    mode: '0750'
 
 - name: "Fedora crypto-policy {{ crypto_policy }}"
   when: ansible_distribution == 'Fedora'
@@ -94,13 +94,13 @@
   ansible.builtin.copy:
     src: issue
     dest: /etc/issue
-    mode: 0644
+    mode: '0644'
 
 - name: Create login banner
   ansible.builtin.copy:
     src: issue
     dest: /etc/issue.net
-    mode: 0644
+    mode: '0644'
 
 - name: Manage ed25519 host key
   when: crypto_policy == 'STRICT'
@@ -123,14 +123,14 @@
     - name: Set host key permissions
       ansible.builtin.file:
         path: /etc/ssh/ssh_host_ed25519_key
-        mode: 0600
+        mode: '0600'
 
     - name: Configure ed25519 host key
       ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config
         regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
         line: 'HostKey /etc/ssh/ssh_host_ed25519_key'
-        mode: 0600
+        mode: '0600'
         state: present
       notify: Restart sshd
 
@@ -146,7 +146,7 @@
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
-    mode: 0600
+    mode: '0600'
     state: absent
   notify: Restart sshd
   when: crypto_policy in ['FIPS', 'FIPS:OSPP']

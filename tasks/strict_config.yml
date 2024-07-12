@@ -7,10 +7,10 @@
   ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
     regex: '^CRYPTO_POLICY'
-    line: "CRYPTO_POLICY='-oCiphers={{ Ciphers }} -oMACs={{ MACs }} -oKexAlgorithms={{ KexAlgorithms }} -oHostKeyAlgorithms={{ HostKeyAlgorithms }}'"
+    line: "CRYPTO_POLICY='-oCiphers={{ ciphers }} -oMACs={{ macs }} -oKexAlgorithms={{ kex_algorithms }} -oHostKeyAlgorithms={{ host_key_algorithms }}'"
     state: present
     create: true
-    mode: 0640
+    mode: '0640'
   notify: Restart sshd
 
 - name: Install rgn-tools for entropy, if available
@@ -27,7 +27,7 @@
     regexp: '^SSH_USE_STRONG_RNG'
     line: 'SSH_USE_STRONG_RNG=32'
     state: present
-    mode: 0640
+    mode: '0640'
   when: entropy.changed | bool  # noqa no-handler
   notify: Start RNG Entropy Gatherer
 ...
